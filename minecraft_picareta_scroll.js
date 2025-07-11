@@ -1,7 +1,3 @@
-if (!localStorage.getItem('loggedInUser')) {
-  window.location.href = 'login.html';
-}
-
 const { Engine, Render, Runner, World, Bodies, Events } = Matter;
 const BLOCK_SIZE = 45;
 const NUM_BLOCKS = 8;
@@ -379,8 +375,3 @@ createBlockRow(300);
 createBlockRow(345);
 createBlockRow(390);
 spawnBlocksIfNeeded();
-
-document.getElementById('logoutBtn').addEventListener('click', () => {
-  localStorage.removeItem('loggedInUser');
-  window.location.href = 'login.html';
-});
