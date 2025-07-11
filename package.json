@@ -1,0 +1,9 @@
+{
+  "name": "minecraft-live",
+  "version": "1.0.0",
+  "description": "YouTube Live like monitor",
+  "main": "youtube_tnt_trigger.js",
+  "dependencies": {
+    "googleapis": "^118.0.0"
+  }
+}
