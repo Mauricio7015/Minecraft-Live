@@ -105,6 +105,14 @@
       animation: explode 0.6s steps(5) forwards;
     }
 
+    #logoutBtn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 8px 12px;
+      z-index: 1000;
+    }
+
     @keyframes explode {
       0% { transform: scale(0.5); opacity: 1; }
       100% { transform: scale(2); opacity: 0; }
@@ -113,6 +121,12 @@
   </style>
 </head>
 <body>
+  <script>
+    if (!localStorage.getItem('loggedInUser')) {
+      window.location.href = 'login.html';
+    }
+  </script>
+  <button id="logoutBtn">Sair</button>
   <div id="blockCounter">
     <div>Diamond: <span id="count-diamond">0</span></div>
     <div>Gold: <span id="count-gold">0</span></div>
@@ -522,6 +536,11 @@
     createBlockRow(345);
     createBlockRow(390);
     spawnBlocksIfNeeded();
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('loggedInUser');
+      window.location.href = 'login.html';
+    });
   </script>
 </body>
 </html>

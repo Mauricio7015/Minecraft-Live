@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registrar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: url('fundo.jpeg');
+      background-size: cover;
+      margin: 0;
+    }
+    .container {
+      background: rgba(0,0,0,0.7);
+      padding: 20px;
+      border-radius: 8px;
+      color: white;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 8px 16px;
+    }
+    a { color: #7ec0ee; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Registrar</h2>
+    <form id="registerForm">
+      <input type="text" id="username" placeholder="Usuário" required />
+      <input type="password" id="password" placeholder="Senha" required />
+      <button type="submit">Registrar</button>
+    </form>
+    <p>Já possui conta? <a href="login.html">Login</a></p>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const users = JSON.parse(localStorage.getItem('users') || '{}');
+      if (users[user]) {
+        alert('Usuário já existe');
+        return;
+      }
+      users[user] = pass;
+      localStorage.setItem('users', JSON.stringify(users));
+      alert('Registrado com sucesso!');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
