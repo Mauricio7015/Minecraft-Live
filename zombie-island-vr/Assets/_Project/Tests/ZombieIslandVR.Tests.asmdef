@@ -1,0 +1,20 @@
+{
+    "name": "ZombieIslandVR.Tests",
+    "rootNamespace": "ZombieIslandVR.Tests",
+    "references": [
+        "ZombieIslandVR.Runtime",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

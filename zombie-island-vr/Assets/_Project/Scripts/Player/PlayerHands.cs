@@ -117,14 +117,27 @@ namespace ZombieIslandVR.Player
 
         // ─── Fire ─────────────────────────────────────────────────────────────
 
+        private bool _rightTriggerWasHeld;
+        private bool _leftTriggerWasHeld;
+
         private void HandleFireInput()
         {
             // Trigger = fire for firearms, swing detection handled in MeleeWeapon
-            if (_rightDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool rightTrigger) && rightTrigger)
-                RightHandWeapon?.TriggerPulled();
+            _rightDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool rightTrigger);
+            _leftDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool leftTrigger);
 
-            if (_leftDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool leftTrigger) && leftTrigger)
+            if (rightTrigger)
+                RightHandWeapon?.TriggerPulled();
+            else if (_rightTriggerWasHeld)
+                (RightHandWeapon as ZombieIslandVR.Weapons.FirearmWeapon)?.TriggerReleased();
+
+            if (leftTrigger)
                 LeftHandWeapon?.TriggerPulled();
+            else if (_leftTriggerWasHeld)
+                (LeftHandWeapon as ZombieIslandVR.Weapons.FirearmWeapon)?.TriggerReleased();
+
+            _rightTriggerWasHeld = rightTrigger;
+            _leftTriggerWasHeld = leftTrigger;
         }
 
         // ─── Helpers ──────────────────────────────────────────────────────────

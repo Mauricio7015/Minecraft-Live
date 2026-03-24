@@ -29,9 +29,16 @@ namespace ZombieIslandVR.Systems
         public PlayerInventory inventory;
         public Transform headTransform;
 
+        [Header("References")]
+        public ZombieIslandVR.Player.PlayerHands playerHands;
+
         [Header("Eat Config")]
         public float eatDistance = 0.2f;        // distance from head to trigger eat
         public float drinkDistance = 0.25f;
+        public float eatConfirmTime = 1f;       // seconds item must be near mouth
+
+        private float _eatTimer;
+        private string _pendingItemId;
 
         // ─── Food Table ───────────────────────────────────────────────────────
         // All food items: matches design doc
@@ -51,8 +58,66 @@ namespace ZombieIslandVR.Systems
 
         private void Update()
         {
-            // This is called when the player physically moves a food item to their mouth.
-            // In practice, the InteractableObject / food pickup handles this via trigger.
+            if (playerHands == null || headTransform == null) return;
+
+            // Check if either hand is holding a food item near the player's mouth
+            string heldItemId = GetHeldFoodItemId();
+
+            if (heldItemId != null)
+            {
+                if (heldItemId == _pendingItemId)
+                {
+                    _eatTimer += Time.deltaTime;
+                    if (_eatTimer >= eatConfirmTime)
+                    {
+                        ConsumeFood(heldItemId);
+                        _eatTimer = 0f;
+                        _pendingItemId = null;
+                    }
+                }
+                else
+                {
+                    _pendingItemId = heldItemId;
+                    _eatTimer = 0f;
+                }
+            }
+            else
+            {
+                _pendingItemId = null;
+                _eatTimer = 0f;
+            }
+        }
+
+        private string GetHeldFoodItemId()
+        {
+            // Check right hand weapon — if it's an interactable food item held near mouth
+            // In practice, food items have an InventoryItem component with a food itemId.
+            // We check both hands via PlayerHands hand anchors proximity to headTransform.
+            Transform right = playerHands.rightHandAnchor;
+            Transform left = playerHands.leftHandAnchor;
+
+            if (right != null && Vector3.Distance(right.position, headTransform.position) <= eatDistance)
+            {
+                // Scan for a food prefab in right hand's collider overlap
+                var cols = Physics.OverlapSphere(right.position, 0.1f);
+                foreach (var col in cols)
+                {
+                    var item = col.GetComponent<FoodItemData>();
+                    if (item != null && CanEat(item.itemId)) return item.itemId;
+                }
+            }
+
+            if (left != null && Vector3.Distance(left.position, headTransform.position) <= drinkDistance)
+            {
+                var cols = Physics.OverlapSphere(left.position, 0.1f);
+                foreach (var col in cols)
+                {
+                    var item = col.GetComponent<FoodItemData>();
+                    if (item != null && CanEat(item.itemId)) return item.itemId;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>

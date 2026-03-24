@@ -1,0 +1,19 @@
+{
+    "name": "ZombieIslandVR.Runtime",
+    "rootNamespace": "ZombieIslandVR",
+    "references": [
+        "Unity.XR.Management",
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "Unity.AI.Navigation"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

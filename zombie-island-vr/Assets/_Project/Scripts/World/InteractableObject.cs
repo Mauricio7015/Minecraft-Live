@@ -21,6 +21,15 @@ namespace ZombieIslandVR.World
         public LootTable lootTable;
         public bool searched = false;
 
+        [Header("Food/Drink (for Eat/Drink type)")]
+        public float hungerRestore = 0f;
+        public float thirstRestore = 0f;
+        public float healthRestore = 0f;
+
+        [Header("Audio")]
+        public AudioSource audioSource;
+        public AudioClip interactSound;
+
         [Header("Events")]
         public UnityEvent onInteract;
         public UnityEvent onOpen;
@@ -34,6 +43,7 @@ namespace ZombieIslandVR.World
         protected virtual void Awake()
         {
             _animator = GetComponent<Animator>();
+            if (audioSource == null) audioSource = GetComponent<AudioSource>();
         }
 
         // ─── Public API ───────────────────────────────────────────────────────
@@ -86,18 +96,41 @@ namespace ZombieIslandVR.World
             else onClose?.Invoke();
         }
 
-        protected virtual void Toggle() { }
+        protected virtual void Toggle()
+        {
+            _isOpen = !_isOpen;
+            _animator?.SetBool("IsActive", _isOpen);
+            PlayInteractSound();
+        }
 
-        protected virtual void Use(PlayerInventory inventory) { }
+        protected virtual void Use(PlayerInventory inventory)
+        {
+            PlayInteractSound();
+            onInteract?.Invoke();
+        }
 
         protected virtual void Eat(PlayerInventory inventory)
         {
-            // Consume and restore hunger
+            var stats = inventory?.GetComponent<ZombieIslandVR.Player.PlayerStats>();
+            if (stats == null) return;
+            stats.Eat(hungerRestore, healthRestore);
+            PlayInteractSound();
+            Debug.Log($"[Interactable] Ate {gameObject.name}: +{hungerRestore} hunger, +{healthRestore} HP");
         }
 
         protected virtual void Drink(PlayerInventory inventory)
         {
-            // Consume and restore thirst
+            var stats = inventory?.GetComponent<ZombieIslandVR.Player.PlayerStats>();
+            if (stats == null) return;
+            stats.Drink(thirstRestore);
+            PlayInteractSound();
+            Debug.Log($"[Interactable] Drank {gameObject.name}: +{thirstRestore} thirst");
+        }
+
+        protected void PlayInteractSound()
+        {
+            if (audioSource != null && interactSound != null)
+                audioSource.PlayOneShot(interactSound);
         }
 
         // ─── Prompt ───────────────────────────────────────────────────────────

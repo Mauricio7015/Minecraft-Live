@@ -74,7 +74,8 @@ namespace ZombieIslandVR.Player
 
             if (CurrentWeight + item.weight * item.quantity > maxWeightKg)
             {
-                Debug.LogWarning("[Inventory] Overweight.");
+                Debug.LogWarning("[Inventory] Overweight — item rejected.");
+                return false;
             }
 
             var existing = _backpack.Find(i => i.itemId == item.itemId);

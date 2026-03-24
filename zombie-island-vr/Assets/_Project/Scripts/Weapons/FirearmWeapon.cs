@@ -85,6 +85,9 @@ namespace ZombieIslandVR.Weapons
             EjectCasing();
             TriggerHaptics(fireHapticAmplitude, fireHapticDuration);
             CastBullet();
+
+            // Propagate gunshot sound to nearby zombies
+            ZombieIslandVR.Systems.GunShotEventSystem.Instance?.ReportGunShot(transform.position, 1f);
         }
 
         private void CastBullet()

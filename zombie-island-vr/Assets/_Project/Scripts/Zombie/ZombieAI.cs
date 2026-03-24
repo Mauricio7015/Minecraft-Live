@@ -53,6 +53,7 @@ namespace ZombieIslandVR.Zombie
         private float _nextAttackTime;
         private float _nextGroanTime;
         private bool _playerInSight;
+        private ZombieIslandVR.World.DayNightCycle _dayNightCycle;
 
         // ─── Init ─────────────────────────────────────────────────────────────
 
@@ -66,6 +67,7 @@ namespace ZombieIslandVR.Zombie
         private void Start()
         {
             _player = GameObject.FindWithTag("Player")?.transform;
+            _dayNightCycle = FindObjectOfType<ZombieIslandVR.World.DayNightCycle>();
         }
 
         private void Update()
@@ -277,8 +279,7 @@ namespace ZombieIslandVR.Zombie
 
         private bool IsNight()
         {
-            var cycle = FindObjectOfType<ZombieIslandVR.World.DayNightCycle>();
-            return cycle != null && cycle.IsNight;
+            return _dayNightCycle != null && _dayNightCycle.IsNight;
         }
     }
 }

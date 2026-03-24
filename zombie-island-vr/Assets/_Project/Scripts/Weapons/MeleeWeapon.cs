@@ -41,11 +41,14 @@ namespace ZombieIslandVR.Weapons
         private bool _isBlocking;
         private float _lastSwingTime;
         private const float SwingCooldown = 0.15f;
+        private const float BlockStaminaDrain = 5f;  // stamina/s while blocking
+        private ZombieIslandVR.Player.PlayerStats _playerStats;
 
         protected override void Awake()
         {
             base.Awake();
             currentDurability = maxDurability;
+            _playerStats = GetComponentInParent<ZombieIslandVR.Player.PlayerStats>();
         }
 
         protected override Vector3 GetGripOffset() => meleeGripOffset;
@@ -62,13 +65,37 @@ namespace ZombieIslandVR.Weapons
             if (!IsHeld || _playerHands == null) return;
 
             UpdateSwingTrail();
+            UpdateBlocking();
 
-            // Automatic swing detection via velocity
-            float speed = _playerHands.RightHandVelocity.magnitude;
-            if (speed >= minSwingSpeed && Time.time > _lastSwingTime + SwingCooldown)
+            // Automatic swing detection via velocity (only when not blocking)
+            if (!_isBlocking)
             {
-                AttemptSwingDamage(speed);
+                float speed = _playerHands.RightHandVelocity.magnitude;
+                if (speed >= minSwingSpeed && Time.time > _lastSwingTime + SwingCooldown)
+                    AttemptSwingDamage(speed);
             }
+        }
+
+        private void UpdateBlocking()
+        {
+            if (!_isBlocking || _playerStats == null) return;
+            // Drain stamina while holding block
+            float drain = BlockStaminaDrain * Time.deltaTime;
+            if (_playerStats.currentStamina <= 0f)
+            {
+                _isBlocking = false;
+                return;
+            }
+            _playerStats.currentStamina = Mathf.Max(0f, _playerStats.currentStamina - drain);
+        }
+
+        /// <summary>
+        /// Called by PlayerStats before applying damage; reduces incoming damage if blocking.
+        /// </summary>
+        public float ModifyIncomingDamage(float damage)
+        {
+            if (!_isBlocking || !canBlock) return damage;
+            return damage * 0.3f;  // 70% damage reduction while blocking
         }
 
         // ─── Swing Damage ─────────────────────────────────────────────────────

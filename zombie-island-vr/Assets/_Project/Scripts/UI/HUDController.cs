@@ -53,6 +53,7 @@ namespace ZombieIslandVR.UI
         private Canvas _canvas;
         private Camera _mainCam;
         private int _dayCount = 1;
+        private ZombieIslandVR.World.DayNightCycle _dayNightCycle;
 
         private void Awake()
         {
@@ -69,6 +70,15 @@ namespace ZombieIslandVR.UI
                 playerStats.onHungerChanged.AddListener(UpdateHunger);
                 playerStats.onThirstChanged.AddListener(UpdateThirst);
             }
+
+            _dayNightCycle = FindObjectOfType<ZombieIslandVR.World.DayNightCycle>();
+            if (_dayNightCycle != null)
+                _dayNightCycle.onNightBegin.AddListener(IncrementDay);
+        }
+
+        private void IncrementDay()
+        {
+            _dayCount++;
         }
 
         private void Update()
@@ -153,10 +163,9 @@ namespace ZombieIslandVR.UI
 
         private void UpdateTimeDisplay()
         {
-            var cycle = FindObjectOfType<ZombieIslandVR.World.DayNightCycle>();
-            if (cycle == null) return;
+            if (_dayNightCycle == null) return;
 
-            float hours = cycle.CurrentHour;
+            float hours = _dayNightCycle.CurrentHour;
             int h = Mathf.FloorToInt(hours);
             int m = Mathf.FloorToInt((hours - h) * 60f);
             if (timeText) timeText.text = $"{h:D2}:{m:D2}";
