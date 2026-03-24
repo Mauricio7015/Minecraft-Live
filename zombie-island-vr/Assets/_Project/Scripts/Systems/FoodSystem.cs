@@ -98,12 +98,12 @@ namespace ZombieIslandVR.Systems
 
             if (right != null && Vector3.Distance(right.position, headTransform.position) <= eatDistance)
             {
-                // Scan for a food prefab in right hand's collider overlap
+                // FoodPickup is the MonoBehaviour on world food objects (FoodItemData is a ScriptableObject)
                 var cols = Physics.OverlapSphere(right.position, 0.1f);
                 foreach (var col in cols)
                 {
-                    var item = col.GetComponent<FoodItemData>();
-                    if (item != null && CanEat(item.itemId)) return item.itemId;
+                    var pickup = col.GetComponent<FoodPickup>();
+                    if (pickup != null && CanEat(pickup.itemId)) return pickup.itemId;
                 }
             }
 
@@ -112,8 +112,8 @@ namespace ZombieIslandVR.Systems
                 var cols = Physics.OverlapSphere(left.position, 0.1f);
                 foreach (var col in cols)
                 {
-                    var item = col.GetComponent<FoodItemData>();
-                    if (item != null && CanEat(item.itemId)) return item.itemId;
+                    var pickup = col.GetComponent<FoodPickup>();
+                    if (pickup != null && CanEat(pickup.itemId)) return pickup.itemId;
                 }
             }
 

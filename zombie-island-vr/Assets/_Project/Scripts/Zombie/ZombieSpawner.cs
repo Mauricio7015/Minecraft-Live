@@ -36,10 +36,12 @@ namespace ZombieIslandVR.Zombie
         private List<GameObject> _active = new List<GameObject>();
         private Transform _player;
         private float _nextHordeTime;
+        private ZombieIslandVR.World.DayNightCycle _dayNightCycle;
 
         private void Start()
         {
             _player = GameObject.FindWithTag("Player")?.transform;
+            _dayNightCycle = FindObjectOfType<ZombieIslandVR.World.DayNightCycle>();
             _nextHordeTime = Time.time + hordeInterval;
             StartCoroutine(SpawnLoop());
         }
@@ -168,8 +170,7 @@ namespace ZombieIslandVR.Zombie
 
         private bool IsNight()
         {
-            var cycle = FindObjectOfType<ZombieIslandVR.World.DayNightCycle>();
-            return cycle != null && cycle.IsNight;
+            return _dayNightCycle != null && _dayNightCycle.IsNight;
         }
     }
 }
