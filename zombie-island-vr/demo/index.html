@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zombie Island VR — Demo de Teste</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; color: #e0e0e0; font-family: 'Courier New', monospace; overflow: hidden; }
+  canvas { display: block; }
+  #hud {
+    position: fixed; top: 0; left: 0; width: 100%; pointer-events: none;
+    padding: 12px 16px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .stat-group { display: flex; flex-direction: column; gap: 5px; min-width: 160px; }
+  .stat-bar { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+  .bar-label { width: 56px; text-align: right; color: #aaa; }
+  .bar-track { flex: 1; height: 8px; background: #1a1a1a; border: 1px solid #333; border-radius: 2px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 2px; transition: width 0.2s; }
+  .bar-hp   .bar-fill { background: linear-gradient(90deg, #8b0000, #22c55e); }
+  .bar-stam .bar-fill { background: linear-gradient(90deg, #164e63, #22d3ee); }
+  .bar-food .bar-fill { background: linear-gradient(90deg, #78350f, #f97316); }
+  .bar-thir .bar-fill { background: linear-gradient(90deg, #1e3a8a, #3b82f6); }
+  #ammo-display { font-size: 28px; font-weight: bold; color: #facc15; letter-spacing: 2px; text-align: right; }
+  #ammo-display span { font-size: 14px; color: #888; }
+  #crosshair {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 20px; height: 20px; pointer-events: none;
+  }
+  #crosshair::before, #crosshair::after {
+    content: ''; position: absolute; background: rgba(255,255,255,0.7);
+  }
+  #crosshair::before { width: 2px; height: 100%; left: 50%; transform: translateX(-50%); }
+  #crosshair::after  { width: 100%; height: 2px; top: 50%; transform: translateY(-50%); }
+  #message {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -80px);
+    background: rgba(0,0,0,0.75); border: 1px solid #444;
+    padding: 8px 18px; border-radius: 4px;
+    font-size: 13px; color: #f0f0f0; text-align: center;
+    pointer-events: none; transition: opacity 0.5s;
+  }
+  #day-time {
+    position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.5); padding: 4px 14px; border-radius: 12px;
+    font-size: 13px; color: #ddd;
+  }
+  #kill-counter {
+    position: fixed; top: 12px; right: 16px;
+    font-size: 13px; color: #ef4444;
+  }
+  #game-over {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.88);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    display: none;
+  }
+  #game-over h1 { font-size: 52px; color: #ef4444; margin-bottom: 16px; }
+  #game-over p  { font-size: 16px; color: #aaa; margin-bottom: 32px; }
+  #game-over button {
+    padding: 12px 36px; background: #dc2626; color: #fff;
+    border: none; border-radius: 4px; font-size: 16px; cursor: pointer;
+    font-family: inherit; letter-spacing: 1px;
+  }
+  #game-over button:hover { background: #b91c1c; }
+  #instructions {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; color: #555; text-align: center; pointer-events: none;
+  }
+  .vignette {
+    position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.7) 100%);
+  }
+  #blood-overlay {
+    position: fixed; inset: 0; pointer-events: none;
+    background: rgba(180,0,0,0); transition: background 0.3s;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="vignette"></div>
+<div id="blood-overlay"></div>
+
+<!-- HUD -->
+<div id="hud">
+  <div class="stat-group">
+    <div class="stat-bar bar-hp">
+      <span class="bar-label">HP</span>
+      <div class="bar-track"><div class="bar-fill" id="bar-hp" style="width:100%"></div></div>
+    </div>
+    <div class="stat-bar bar-stam">
+      <span class="bar-label">Stamina</span>
+      <div class="bar-track"><div class="bar-fill" id="bar-stam" style="width:100%"></div></div>
+    </div>
+    <div class="stat-bar bar-food">
+      <span class="bar-label">Fome</span>
+      <div class="bar-track"><div class="bar-fill" id="bar-food" style="width:100%"></div></div>
+    </div>
+    <div class="stat-bar bar-thir">
+      <span class="bar-label">Sede</span>
+      <div class="bar-track"><div class="bar-fill" id="bar-thir" style="width:100%"></div></div>
+    </div>
+  </div>
+  <div id="ammo-display">15 <span>/ 90</span></div>
+</div>
+
+<div id="crosshair"></div>
+<div id="day-time">06:00 — Dia 1</div>
+<div id="kill-counter">☠ 0 zumbis</div>
+<div id="message" style="opacity:0"></div>
+
+<div id="game-over">
+  <h1>VOCÊ MORREU</h1>
+  <p id="death-stats">Sobreviveu 0 dias • Matou 0 zumbis</p>
+  <button onclick="location.reload()">JOGAR NOVAMENTE</button>
+</div>
+
+<div id="instructions">WASD/Setas — Mover &nbsp;|&nbsp; Mouse — Olhar &nbsp;|&nbsp; Click — Atirar &nbsp;|&nbsp; R — Recarregar &nbsp;|&nbsp; F — Pegar item &nbsp;|&nbsp; Clique para capturar mouse</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+//  ZOMBIE ISLAND VR — Web Demo  (Three.js inline via CDN import)
+//  Mecânicas: movimento, tiro, zumbis com IA, stats de sobrevivência
+// ═══════════════════════════════════════════════════════════════════
+
+// Inline mini-engine using Canvas 2D (no dependency required)
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+// ─── Resize ───────────────────────────────────────────────────────
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ─── Constants ────────────────────────────────────────────────────
+const W = () => canvas.width;
+const H = () => canvas.height;
+const TAU = Math.PI * 2;
+
+// ─── Player State ─────────────────────────────────────────────────
+const player = {
+  x: 500, y: 500,          // world position
+  angle: 0,                 // looking direction (radians)
+  hp: 100, maxHp: 100,
+  stamina: 100, maxStamina: 100,
+  hunger: 100, maxHunger: 100,
+  thirst: 100, maxThirst: 100,
+  ammo: 15, reserveAmmo: 90,
+  speed: 120,               // px/s
+  kills: 0,
+  dead: false,
+  damageCooldown: 0,
+  sprintTimer: 0,
+};
+
+// ─── Day/Night ────────────────────────────────────────────────────
+let timeOfDay = 0.25;       // 0=midnight, 0.25=6am, 0.5=noon, 0.75=6pm
+let dayCount = 1;
+const DAY_DURATION = 240;   // seconds for full cycle
+
+// ─── World Bounds ─────────────────────────────────────────────────
+const WORLD_SIZE = 2000;
+const ISLAND_RADIUS = 850;
+const RADIOACTIVE_EDGE = 120;
+
+// ─── Zombies ──────────────────────────────────────────────────────
+const zombies = [];
+const MAX_ZOMBIES = 25;
+const ZOMBIE_TYPES = [
+  { name:'Comum',   color:'#4ade80', hp:80,  speed:60,  dmg:10, radius:14 },
+  { name:'Corredor',color:'#facc15', hp:50,  speed:120, dmg:8,  radius:12 },
+  { name:'Bruto',   color:'#f87171', hp:300, speed:35,  dmg:30, radius:20 },
+];
+
+// ─── Items ────────────────────────────────────────────────────────
+const items = [];
+spawnItems();
+
+// ─── Bullets ──────────────────────────────────────────────────────
+const bullets = [];
+
+// ─── Particles ────────────────────────────────────────────────────
+const particles = [];
+
+// ─── Input ────────────────────────────────────────────────────────
+const keys = {};
+let mouseX = 0, mouseY = 0, mouseDX = 0;
+let pointerLocked = false;
+
+document.addEventListener('keydown', e => { keys[e.code] = true; });
+document.addEventListener('keyup',   e => { keys[e.code] = false; });
+
+canvas.addEventListener('click', () => {
+  if (!pointerLocked) canvas.requestPointerLock();
+  else shoot();
+});
+
+document.addEventListener('pointerlockchange', () => {
+  pointerLocked = document.pointerLockElement === canvas;
+});
+
+document.addEventListener('mousemove', e => {
+  if (pointerLocked) {
+    mouseDX += e.movementX;
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'KeyR') reload();
+  if (e.code === 'KeyF') tryPickup();
+});
+
+// ─── Spawn Zombies ────────────────────────────────────────────────
+function spawnZombie() {
+  if (zombies.length >= MAX_ZOMBIES) return;
+  const angle = Math.random() * TAU;
+  const dist = 300 + Math.random() * 300;
+  const type = ZOMBIE_TYPES[Math.floor(Math.random() * (isNight() ? ZOMBIE_TYPES.length : 2))];
+  zombies.push({
+    x: player.x + Math.cos(angle) * dist,
+    y: player.y + Math.sin(angle) * dist,
+    hp: type.hp, maxHp: type.hp,
+    speed: type.speed + (Math.random() - 0.5) * 20,
+    dmg: type.dmg,
+    color: type.color,
+    radius: type.radius,
+    name: type.name,
+    state: 'wander',
+    wanderAngle: Math.random() * TAU,
+    attackTimer: 0,
+    hitFlash: 0,
+    dead: false,
+  });
+}
+
+// ─── Items ────────────────────────────────────────────────────────
+function spawnItems() {
+  const defs = [
+    { id:'canned_food',  label:'Lata',   color:'#f97316', hunger:30, thirst:0,  hp:0  },
+    { id:'water_bottle', label:'Água',   color:'#3b82f6', hunger:0,  thirst:40, hp:0  },
+    { id:'medical_herb', label:'Erva',   color:'#86efac', hunger:0,  thirst:0,  hp:25 },
+    { id:'ammo_9mm',     label:'9mm x15',color:'#fbbf24', hunger:0,  thirst:0,  hp:0, ammo:15 },
+  ];
+  for (let i = 0; i < 30; i++) {
+    const def = defs[Math.floor(Math.random() * defs.length)];
+    items.push({
+      ...def,
+      x: 200 + Math.random() * 600,
+      y: 200 + Math.random() * 600,
+      radius: 10,
+      picked: false,
+    });
+  }
+}
+
+// ─── Main Loop ────────────────────────────────────────────────────
+let lastTime = performance.now();
+let spawnTimer = 0;
+let messageTimer = 0;
+let messageText = '';
+let survivalTime = 0;
+
+function loop(now) {
+  const dt = Math.min((now - lastTime) / 1000, 0.1);
+  lastTime = now;
+  if (!player.dead) update(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+// ─── Update ───────────────────────────────────────────────────────
+function update(dt) {
+  survivalTime += dt;
+
+  // Day/night cycle
+  timeOfDay = (timeOfDay + dt / DAY_DURATION) % 1;
+  if (timeOfDay < dt / DAY_DURATION) dayCount++;
+
+  // Rotate player with mouse
+  player.angle += mouseDX * 0.003;
+  mouseDX = 0;
+
+  // Movement
+  let dx = 0, dy = 0;
+  if (keys['KeyW'] || keys['ArrowUp'])    { dx += Math.cos(player.angle); dy += Math.sin(player.angle); }
+  if (keys['KeyS'] || keys['ArrowDown'])  { dx -= Math.cos(player.angle); dy -= Math.sin(player.angle); }
+  if (keys['KeyA'] || keys['ArrowLeft'])  { dx += Math.cos(player.angle - Math.PI/2); dy += Math.sin(player.angle - Math.PI/2); }
+  if (keys['KeyD'] || keys['ArrowRight']) { dx += Math.cos(player.angle + Math.PI/2); dy += Math.sin(player.angle + Math.PI/2); }
+
+  const sprint = keys['ShiftLeft'] && player.stamina > 5;
+  const spd = sprint ? player.speed * 1.8 : player.speed;
+  const len = Math.sqrt(dx*dx+dy*dy);
+  if (len > 0) { dx /= len; dy /= len; }
+
+  // Island border clamp
+  let nx = player.x + dx * spd * dt;
+  let ny = player.y + dy * spd * dt;
+  const distFromCenter = Math.hypot(nx - WORLD_SIZE/2, ny - WORLD_SIZE/2);
+  if (distFromCenter < ISLAND_RADIUS) { player.x = nx; player.y = ny; }
+
+  // Radioactive water damage
+  if (distFromCenter > ISLAND_RADIUS - 20) {
+    player.hp -= 15 * dt;
+    showMessage('⚠ ÁGUA RADIOATIVA!', false);
+  }
+
+  // Stamina
+  if (sprint && (dx !== 0 || dy !== 0)) {
+    player.stamina = Math.max(0, player.stamina - 20 * dt);
+  } else {
+    player.stamina = Math.min(player.maxStamina, player.stamina + 10 * dt);
+  }
+
+  // Hunger & thirst
+  player.hunger = Math.max(0, player.hunger - (1/60) * dt * 60);
+  player.thirst = Math.max(0, player.thirst - (1.5/60) * dt * 60);
+  if (player.hunger < 10) { player.hp -= 2 * dt; if (Math.random() < dt) showMessage('Você está com fome!'); }
+  if (player.thirst < 10) { player.hp -= 3 * dt; if (Math.random() < dt) showMessage('Você está com sede!'); }
+  if (player.hunger > 40 && player.thirst > 40 && player.hp < player.maxHp)
+    player.hp = Math.min(player.maxHp, player.hp + 0.5 * dt);
+
+  if (player.hp <= 0) { player.dead = true; showGameOver(); return; }
+
+  // Damage cooldown
+  if (player.damageCooldown > 0) player.damageCooldown -= dt;
+
+  // Zombies
+  updateZombies(dt);
+
+  // Bullets
+  updateBullets(dt);
+
+  // Particles
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx * dt; p.y += p.vy * dt;
+    p.life -= dt; p.vy += 200 * dt;
+    if (p.life <= 0) particles.splice(i, 1);
+  }
+
+  // Spawn
+  spawnTimer -= dt;
+  if (spawnTimer <= 0) {
+    spawnTimer = isNight() ? 3 : 7;
+    spawnZombie();
+  }
+
+  // Message timer
+  if (messageTimer > 0) { messageTimer -= dt; if (messageTimer <= 0) hideMessage(); }
+
+  updateHUD();
+}
+
+function updateZombies(dt) {
+  for (let i = zombies.length - 1; i >= 0; i--) {
+    const z = zombies[i];
+    if (z.dead) { zombies.splice(i, 1); continue; }
+    if (z.hitFlash > 0) z.hitFlash -= dt;
+
+    const dx = player.x - z.x;
+    const dy = player.y - z.y;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist < 400) {
+      // Chase
+      const nx = dx / dist, ny = dy / dist;
+      z.x += nx * z.speed * dt;
+      z.y += ny * z.speed * dt;
+      z.state = 'chase';
+    } else {
+      // Wander
+      z.x += Math.cos(z.wanderAngle) * z.speed * 0.4 * dt;
+      z.y += Math.sin(z.wanderAngle) * z.speed * 0.4 * dt;
+      if (Math.random() < dt * 0.5) z.wanderAngle += (Math.random()-0.5) * 2;
+      z.state = 'wander';
+    }
+
+    // Attack player
+    if (dist < z.radius + 20 && player.damageCooldown <= 0) {
+      player.hp -= z.dmg;
+      player.damageCooldown = 0.5;
+      flashBlood();
+    }
+  }
+}
+
+function updateBullets(dt) {
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const b = bullets[i];
+    b.x += b.vx * dt;
+    b.y += b.vy * dt;
+    b.life -= dt;
+    if (b.life <= 0) { bullets.splice(i, 1); continue; }
+
+    // Zombie collision
+    let hit = false;
+    for (let j = zombies.length - 1; j >= 0; j--) {
+      const z = zombies[j];
+      if (Math.hypot(b.x - z.x, b.y - z.y) < z.radius + 4) {
+        z.hp -= b.dmg;
+        z.hitFlash = 0.12;
+        spawnParticles(z.x, z.y, '#ef4444', 6);
+        bullets.splice(i, 1);
+        hit = true;
+        if (z.hp <= 0) {
+          z.dead = true;
+          player.kills++;
+          spawnParticles(z.x, z.y, '#ef4444', 15);
+        }
+        break;
+      }
+    }
+    if (!hit && b.life <= 0) bullets.splice(i, 1);
+  }
+}
+
+// ─── Draw ─────────────────────────────────────────────────────────
+function draw() {
+  ctx.clearRect(0, 0, W(), H());
+
+  // Sky gradient based on time
+  const sky = getSkyColor();
+  ctx.fillStyle = sky;
+  ctx.fillRect(0, 0, W(), H());
+
+  // Camera transform: center on player
+  const camX = W()/2 - player.x;
+  const camY = H()/2 - player.y;
+
+  ctx.save();
+  ctx.translate(camX, camY);
+
+  drawWorld();
+  drawItems();
+  drawZombies();
+  drawBullets();
+  drawParticles();
+  drawPlayer();
+
+  ctx.restore();
+
+  // Screen-space overlay for radioactive edges
+  drawRadioactiveOverlay();
+}
+
+function drawWorld() {
+  // Ocean
+  ctx.fillStyle = '#0c4a6e';
+  ctx.fillRect(0, 0, WORLD_SIZE, WORLD_SIZE);
+
+  // Island base
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(WORLD_SIZE/2, WORLD_SIZE/2, ISLAND_RADIUS, 0, TAU);
+  ctx.fillStyle = isNight() ? '#1a2e1a' : '#3d7a3d';
+  ctx.fill();
+
+  // Beach ring
+  ctx.beginPath();
+  ctx.arc(WORLD_SIZE/2, WORLD_SIZE/2, ISLAND_RADIUS, 0, TAU);
+  ctx.strokeStyle = '#d4a554';
+  ctx.lineWidth = 40;
+  ctx.stroke();
+  ctx.restore();
+
+  // Radioactive water glow
+  const grd = ctx.createRadialGradient(WORLD_SIZE/2, WORLD_SIZE/2, ISLAND_RADIUS - 30, WORLD_SIZE/2, WORLD_SIZE/2, ISLAND_RADIUS + RADIOACTIVE_EDGE);
+  grd.addColorStop(0, 'rgba(0,0,0,0)');
+  grd.addColorStop(0.5, 'rgba(60,180,40,0.15)');
+  grd.addColorStop(1, 'rgba(60,220,40,0.35)');
+  ctx.beginPath();
+  ctx.arc(WORLD_SIZE/2, WORLD_SIZE/2, ISLAND_RADIUS + RADIOACTIVE_EDGE, 0, TAU);
+  ctx.fillStyle = grd;
+  ctx.fill();
+
+  // Zone labels (debug)
+  ctx.font = '11px Courier New';
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.textAlign = 'center';
+  const zones = [
+    [1000,  350, 'BASE MILITAR'],
+    [ 650,  600, 'FLORESTA'],
+    [1000,  800, 'VILA'],
+    [1000, 1200, 'PORTO'],
+    [ 700, 1200, 'PRAIA'],
+  ];
+  zones.forEach(([x,y,label]) => ctx.fillText(label, x, y));
+  ctx.textAlign = 'left';
+}
+
+function drawPlayer() {
+  ctx.save();
+  ctx.translate(player.x, player.y);
+  ctx.rotate(player.angle);
+
+  // Body
+  ctx.fillStyle = player.damageCooldown > 0.3 ? '#ef4444' : '#4ade80';
+  ctx.beginPath();
+  ctx.arc(0, 0, 14, 0, TAU);
+  ctx.fill();
+
+  // Direction indicator
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.moveTo(14, 0);
+  ctx.lineTo(22, 3);
+  ctx.lineTo(22, -3);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawZombies() {
+  zombies.forEach(z => {
+    if (z.dead) return;
+    ctx.save();
+    ctx.translate(z.x, z.y);
+
+    // Body
+    ctx.fillStyle = z.hitFlash > 0 ? '#ffffff' : z.color;
+    ctx.beginPath();
+    ctx.arc(0, 0, z.radius, 0, TAU);
+    ctx.fill();
+
+    // HP bar
+    const barW = z.radius * 2.5;
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(-barW/2, -z.radius - 10, barW, 4);
+    ctx.fillStyle = z.hp / z.maxHp > 0.5 ? '#22c55e' : '#ef4444';
+    ctx.fillRect(-barW/2, -z.radius - 10, barW * (z.hp / z.maxHp), 4);
+
+    ctx.restore();
+  });
+}
+
+function drawBullets() {
+  ctx.fillStyle = '#fbbf24';
+  bullets.forEach(b => {
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, 3, 0, TAU);
+    ctx.fill();
+  });
+}
+
+function drawItems() {
+  items.forEach(item => {
+    if (item.picked) return;
+    ctx.save();
+    ctx.translate(item.x, item.y);
+    const bob = Math.sin(Date.now()/400 + item.x) * 2;
+    ctx.translate(0, bob);
+
+    ctx.fillStyle = item.color;
+    ctx.beginPath();
+    ctx.arc(0, 0, item.radius, 0, TAU);
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = '9px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText(item.label, 0, item.radius + 12);
+    ctx.restore();
+  });
+}
+
+function drawParticles() {
+  particles.forEach(p => {
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, TAU);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawRadioactiveOverlay() {
+  const cx = W()/2, cy = H()/2;
+  // Nothing special needed here beyond the world drawing
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────
+
+function shoot() {
+  if (player.ammo <= 0) { showMessage('Sem munição! Pressione R para recarregar.'); return; }
+  player.ammo--;
+  const spd = 700;
+  bullets.push({
+    x: player.x + Math.cos(player.angle) * 20,
+    y: player.y + Math.sin(player.angle) * 20,
+    vx: Math.cos(player.angle) * spd,
+    vy: Math.sin(player.angle) * spd,
+    dmg: 25, life: 0.4,
+  });
+  updateHUD();
+}
+
+function reload() {
+  if (player.reserveAmmo <= 0) { showMessage('Sem munição reserva!'); return; }
+  const needed = 15 - player.ammo;
+  const loaded = Math.min(needed, player.reserveAmmo);
+  player.ammo += loaded;
+  player.reserveAmmo -= loaded;
+  showMessage(`Recarregado! ${player.ammo}/15`);
+  updateHUD();
+}
+
+function tryPickup() {
+  for (let i = items.length - 1; i >= 0; i--) {
+    const item = items[i];
+    if (item.picked) continue;
+    if (Math.hypot(player.x - item.x, player.y - item.y) < 40) {
+      item.picked = true;
+      if (item.hunger)  player.hunger = Math.min(100, player.hunger + item.hunger);
+      if (item.thirst)  player.thirst = Math.min(100, player.thirst + item.thirst);
+      if (item.hp)      player.hp     = Math.min(100, player.hp + item.hp);
+      if (item.ammo)    { player.reserveAmmo += item.ammo; }
+      showMessage(`Pegou: ${item.label}`);
+      spawnParticles(item.x, item.y, item.color, 8);
+      // Respawn after 60s
+      setTimeout(() => { item.picked = false; item.x = 200 + Math.random()*600; item.y = 200 + Math.random()*600; }, 60000);
+      break;
+    }
+  }
+}
+
+function spawnParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x, y, color,
+      vx: (Math.random()-0.5) * 200,
+      vy: (Math.random()-0.5) * 200 - 50,
+      size: 2 + Math.random() * 3,
+      life: 0.5 + Math.random() * 0.4,
+    });
+  }
+}
+
+function flashBlood() {
+  const overlay = document.getElementById('blood-overlay');
+  overlay.style.background = 'rgba(180,0,0,0.35)';
+  setTimeout(() => overlay.style.background = 'rgba(180,0,0,0)', 300);
+}
+
+function isNight() {
+  return timeOfDay < 0.18 || timeOfDay > 0.78;
+}
+
+function getSkyColor() {
+  // Simple sky gradient based on time
+  const t = timeOfDay;
+  if (t < 0.1 || t > 0.95)  return '#050510';     // deep night
+  if (t < 0.2)               return '#1a0a2e';     // pre-dawn
+  if (t < 0.28)              return '#f97316aa';   // dawn
+  if (t < 0.7)               return '#1a6ba6';     // day
+  if (t < 0.78)              return '#f97316aa';   // dusk
+  if (t < 0.88)              return '#1a0a2e';     // late dusk
+  return '#050510';
+}
+
+function showMessage(text, fade = true) {
+  const el = document.getElementById('message');
+  el.textContent = text;
+  el.style.opacity = '1';
+  messageText = text;
+  messageTimer = 2.5;
+}
+
+function hideMessage() {
+  const el = document.getElementById('message');
+  el.style.opacity = '0';
+}
+
+function updateHUD() {
+  document.getElementById('bar-hp').style.width   = (player.hp / player.maxHp * 100)             + '%';
+  document.getElementById('bar-stam').style.width = (player.stamina / player.maxStamina * 100)   + '%';
+  document.getElementById('bar-food').style.width = (player.hunger / player.maxHunger * 100)     + '%';
+  document.getElementById('bar-thir').style.width = (player.thirst / player.maxThirst * 100)     + '%';
+  document.getElementById('ammo-display').innerHTML = `${player.ammo} <span>/ ${player.reserveAmmo}</span>`;
+  document.getElementById('kill-counter').textContent = `☠ ${player.kills} zumbi${player.kills !== 1 ? 's' : ''}`;
+
+  const hour = Math.floor(timeOfDay * 24);
+  const min  = Math.floor((timeOfDay * 24 - hour) * 60);
+  document.getElementById('day-time').textContent =
+    `${String(hour).padStart(2,'0')}:${String(min).padStart(2,'0')} — ${isNight() ? '🌙' : '☀'} Dia ${dayCount}`;
+}
+
+function showGameOver() {
+  const days = Math.floor(survivalTime / DAY_DURATION);
+  document.getElementById('death-stats').textContent =
+    `Sobreviveu ~${days} dia(s) • Matou ${player.kills} zumbis`;
+  document.getElementById('game-over').style.display = 'flex';
+}
+
+// Initial state
+showMessage('Bem-vindo à Ilha Zumbi! Clique para capturar o mouse.', true);
+for (let i = 0; i < 8; i++) spawnZombie();
+</script>
+</body>
+</html>
