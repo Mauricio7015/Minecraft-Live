@@ -1,0 +1,21 @@
+{
+    "name": "ZombieIslandVR.Editor",
+    "rootNamespace": "ZombieIslandVR.Editor",
+    "references": [
+        "ZombieIslandVR.Runtime",
+        "Unity.AI.Navigation",
+        "Unity.InputSystem",
+        "Unity.RenderPipelines.Universal.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
