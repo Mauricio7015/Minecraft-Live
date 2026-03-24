@@ -1,0 +1,478 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!129 &1
+PlayerSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 24
+  productGUID: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6
+  AndroidProfiler: 0
+  AndroidFilterTouchesWhenObscured: 0
+  AndroidEnableSustainedPerformanceMode: 0
+  defaultScreenOrientation: 0
+  targetDevice: 2
+  useOnDemandResources: 0
+  gpuSkinning: 0
+  graphicsJobs: 0
+  xboxPIXTextureCapture: 0
+  xboxEnableAvatar: 0
+  xboxEnableKinect: 0
+  xboxEnableKinectAutoTracking: 0
+  xboxEnableFitness: 0
+  visibleInBackground: 1
+  allowFullscreenSwitch: 1
+  fullscreenMode: 1
+  xboxEnableSpeech: 0
+  xboxSpeechDB: 0
+  xboxEnableHeadOrientation: 0
+  xboxEnableGuest: 0
+  xboxEnableXFit: 0
+  xboxOneResolution: 0
+  xboxOneSResolution: 0
+  xboxOneXResolution: 3
+  xboxOneMonoLoggingLevel: 0
+  xboxOneLoggingLevel: 1
+  xboxOneDisableEsram: 0
+  xboxOnePresentImmediateThreshold: 0
+  switchQueueCommandMemory: 1048576
+  switchQueueControlMemory: 16384
+  switchQueueComputeMemory: 262144
+  switchNVNShaderPoolsGranularity: 33554432
+  switchNVNDefaultPoolsGranularity: 16777216
+  switchNVNOtherPoolsGranularity: 16777216
+  switchGpuScratchPoolGranularity: 2097152
+  switchAllowGpuScratchShrinking: 0
+  switchNVNMaxPublicTextureIDCount: 0
+  switchNVNMaxPublicSamplerIDCount: 0
+  stadiaPresentMode: 0
+  stadiaTargetFramerate: 0
+  vulkanNumSwapchainBuffers: 3
+  vulkanEnableSetSRGBWrite: 0
+  vulkanEnablePreTransform: 0
+  vulkanEnableLateAcquireNextImage: 0
+  vulkanEnableCommandBufferRecycling: 1
+  m_SupportedAspectRatios:
+    4:3: 1
+    5:4: 1
+    16:10: 1
+    16:9: 1
+    Others: 1
+  productName: ZombieIslandVR
+  companyName: ZombieIslandStudios
+  defaultCursor: {fileID: 0}
+  cursorHotspot: {x: 0, y: 0}
+  m_SplashScreenBackgroundColor: {r: 0.13333334, g: 0.13333334, b: 0.13333334, a: 1}
+  m_ShowUnitySplashScreen: 0
+  m_ShowUnitySplashLogo: 0
+  m_SplashScreenOverlayOpacity: 1
+  m_SplashScreenAnimation: 1
+  m_SplashScreenLogoStyle: 1
+  m_SplashScreenDrawMode: 0
+  m_SplashScreenBackgroundAnimationZoom: 1
+  m_SplashScreenLogoAnimationZoom: 1
+  m_SplashScreenBackgroundLandscapeAspect: 1
+  m_SplashScreenBackgroundPortraitAspect: 1
+  m_SplashScreenBackgroundLandscapeUvs:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  m_SplashScreenBackgroundPortraitUvs:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  m_SplashScreenLogos: []
+  m_VirtualRealitySplashScreen: {fileID: 0}
+  m_HolographicTrackingLossScreen: {fileID: 0}
+  defaultScreenWidth: 1920
+  defaultScreenHeight: 1080
+  defaultScreenWidthWeb: 960
+  defaultScreenHeightWeb: 600
+  m_StereoRenderingPath: 2
+  m_ActiveColorSpace: 1
+  m_MTRendering: 1
+  m_StackTraceTypes: 010000000100000001000000010000000100000001000000
+  iosShowActivityIndicatorOnLoading: -1
+  androidShowActivityIndicatorOnLoading: -1
+  iosAppInBackgroundBehavior: 0
+  iosExtendedQualityRestorationRequiresUserAction: 0
+  m_BuildTargetIcons: []
+  m_BuildTargetPlatformIcons: []
+  m_BuildTargetBatching:
+  - m_BuildTarget: Standalone
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
+  - m_BuildTarget: tvOS
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
+  - m_BuildTarget: Android
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
+  - m_BuildTarget: iPhone
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
+  - m_BuildTarget: WebGL
+    m_StaticBatching: 0
+    m_DynamicBatching: 0
+  m_BuildTargetGraphicsAPIs:
+  - m_BuildTarget: AndroidPlayer
+    m_APIs: 150000000b000000
+    m_Automatic: 0
+  m_BuildTargetVRSettings:
+  - m_BuildTarget: standalone
+    m_Enabled: 0
+    m_Devices:
+    - Oculus
+  openGLRequireES31: 0
+  openGLRequireES31AEP: 0
+  openGLRequireES32: 0
+  m_TemplateCustomTags: {}
+  mobileMTRendering:
+    Android: 1
+    iPhone: 1
+    tvOS: 1
+  m_BuildTargetGroupLightmapEncodingQuality:
+  - m_BuildTarget: Android
+    m_EncodingQuality: 1
+  m_BuildTargetGroupHDRCubemapEncodingQuality: []
+  m_BuildTargetNormalMapEncoding: []
+  m_BuildTargetDefaultTextureCompressionFormat:
+  - m_BuildTarget: Android
+    m_TextureCompressionFormat: 6
+  playModeTestRunnerEnabled: 0
+  actionOnDotNetUnhandledException: 1
+  enableInternalProfiler: 0
+  logObjCUncaughtExceptions: 1
+  enableCrashReportAPI: 0
+  cameraUsageDescription: Required for AR features
+  locationUsageDescription:
+  microphoneUsageDescription: Required for voice features
+  bluetoothUsageDescription:
+  switchNMeta: 0
+  switchNetworkInterfaceManagerInitializeSelf: 0
+  ps4NPAgeRating: 12
+  ps4NPTitleSecret:
+  ps4NPTrophyPackPath:
+  ps4ParentalLevel: 11
+  ps4ContentID: EP0000-NPXX99999_00-XXXXXXXXXXXXXXXX
+  ps4Category: 0
+  ps4MasterVersion: 01.00
+  ps4AppVersion: 01.00
+  ps4AppType: 0
+  ps4ParamSfxPath:
+  ps4VideoOutPixelFormat: 0
+  ps4VideoOutInitialWidth: 1920
+  ps4VideoOutBaseModeInitialWidth: 1920
+  ps4VideoOutReprojectionRate: 60
+  ps4PronunciationXMLPath:
+  ps4PronunciationSIGPath:
+  ps4BackgroundImagePath:
+  ps4StartupImagePath:
+  ps4StartupImagesFolder:
+  ps4SaveDataImagePath:
+  ps4SdkOverride:
+  ps4BGMPath:
+  ps4ShareFilePath:
+  ps4ShareOverlayImagePath:
+  ps4PrivacyGuardImagePath:
+  ps4ExtraSceSysFile:
+  ps4PlayTogetherPlayerCount: 0
+  ps4EnterButtonAssignment: 1
+  ps4ApplicationParam1: 0
+  ps4ApplicationParam2: 0
+  ps4ApplicationParam3: 0
+  ps4ApplicationParam4: 0
+  ps4DownloadDataSize: 0
+  ps4GarlicHeapSize: 2048
+  ps4ProGarlicHeapSize: 2560
+  playerPrefsSupport: 0
+  enableApplicationExit: 0
+  resetResolutionOnWindowResize: 0
+  ps4UseResolutionFallback: 0
+  ps4ReprojectionSupport: 0
+  ps4UseAudio3dBackend: 0
+  ps4UseLowGarlicFragmentationAlgorithm: 1
+  ps4SocialScreenEnabled: 0
+  ps4ScriptOptimizationLevel: 0
+  ps4Audio3dVirtualSpeakerCount: 14
+  ps4attribCpuUsage: 0
+  ps4PatchPkgPath:
+  ps4PatchLatestPkgPath:
+  ps4PatchChangeinfoPath:
+  ps4PatchDayOne: 0
+  ps4attribUserManagement: 0
+  ps4attribMoveSupport: 0
+  ps4attrib3DSupport: 0
+  ps4attribInstallDirToHDD: 0
+  ps4monoEnv:
+  ps4videoRecordingFeaturesUsed: 0
+  ps4contentSearchFeaturesUsed: 0
+  ps4CompatibilityPS5: 0
+  ps4AllowPS5Detection: 0
+  ps4GPU800MHz: 1
+  ps4attribCpuUsageAudio: 0
+  ps4DisableAutoHideSplash: 0
+  ps4PatchRequiredFreeSpace: 0
+  ps4AttribVideoRecording: 0
+  ps4pnSessions: 1
+  ps4pnPresence: 1
+  ps4pnFriends: 1
+  ps4pnGameCustomData: 1
+  playerPrefsMaxSize: 32768
+  ps4attribEyeToEyeDistanceSettingVR: 0
+  ps4IncludedModules: []
+  ps4attribVROutputEnabled: 0
+  monoEnv:
+  psp2Splashimage: {fileID: 0}
+  n3dsOverrideErrorMessage:
+  n3dsOverrideErrorMessageEnglish:
+  n3dsOverrideErrorMessageFrench:
+  n3dsOverrideErrorMessageGerman:
+  n3dsOverrideErrorMessageItalian:
+  n3dsOverrideErrorMessageJapanese:
+  n3dsOverrideErrorMessagePortuguese:
+  n3dsOverrideErrorMessageRussian:
+  n3dsOverrideErrorMessageSpanish:
+  n3dsOverrideErrorMessageSimplifiedChinese:
+  n3dsOverrideErrorMessageTraditionalChinese:
+  n3dsOverrideErrorMessageKorean:
+  n3dsOverrideErrorMessageDutch:
+  n3dsOverrideErrorMessagePortugueseBrazil:
+  n3dsOverrideErrorMessagePlatformDefault: 1
+  n3dsSmallSound: {fileID: 0}
+  n3dsLogoSound: {fileID: 0}
+  n3dsHomemenuSound: {fileID: 0}
+  n3dsSleepSound: {fileID: 0}
+  n3dsShutterSound: {fileID: 0}
+  n3dsCameraLedSound: {fileID: 0}
+  n3dsSDCardInsertSound: {fileID: 0}
+  n3dsSDCardRemoveSound: {fileID: 0}
+  n3dsGameCardInsertSound: {fileID: 0}
+  n3dsGameCardRemoveSound: {fileID: 0}
+  n3dsTvScreensaverSound: {fileID: 0}
+  n3dsMachinePowerOnSound: {fileID: 0}
+  n3dsMachinePowerOffSound: {fileID: 0}
+  n3dsChargerConnectSound: {fileID: 0}
+  n3dsChargerRemoveSound: {fileID: 0}
+  n3dsWifiConnectSound: {fileID: 0}
+  n3dsWifiDisconnectSound: {fileID: 0}
+  n3dsWifiAuthErrorSound: {fileID: 0}
+  iPhoneSdkVersion: 988
+  iOSTargetOSVersionString: 14.0
+  tvOSSdkVersion: 0
+  tvOSRequireExtendedGameController: 0
+  tvOSTargetOSVersionString: 14.0
+  uIPrerenderedIcon: 0
+  uIRequiresPersistentWiFi: 0
+  uIRequiresFullScreen: 1
+  uIStatusBarHidden: 1
+  uIExitOnSuspend: 0
+  uIStatusBarStyle: 0
+  iPhoneSplashScreen: {fileID: 0}
+  iPhoneHighResSplashScreen: {fileID: 0}
+  iPhoneTallHighResSplashScreen: {fileID: 0}
+  iPhone47inSplashScreen: {fileID: 0}
+  iPhone55inPortraitSplashScreen: {fileID: 0}
+  iPhone55inLandscapeSplashScreen: {fileID: 0}
+  iPhone58inPortraitSplashScreen: {fileID: 0}
+  iPhone58inLandscapeSplashScreen: {fileID: 0}
+  iPadPortraitSplashScreen: {fileID: 0}
+  iPadHighResPortraitSplashScreen: {fileID: 0}
+  iPadLandscapeSplashScreen: {fileID: 0}
+  iPadHighResLandscapeSplashScreen: {fileID: 0}
+  iPhone65inPortraitSplashScreen: {fileID: 0}
+  iPhone65inLandscapeSplashScreen: {fileID: 0}
+  iPhone61inPortraitSplashScreen: {fileID: 0}
+  iPhone61inLandscapeSplashScreen: {fileID: 0}
+  iPad11inPortraitSplashScreen: {fileID: 0}
+  iPad11inLandscapeSplashScreen: {fileID: 0}
+  iPad129inPortraitSplashScreen2x: {fileID: 0}
+  iPad129inLandscapeSplashScreen2x: {fileID: 0}
+  appleWatchNotificationScreen: {fileID: 0}
+  appleWatchComplicationScreen: {fileID: 0}
+  appleTVSplashScreen: {fileID: 0}
+  appleTVSplashScreen2x: {fileID: 0}
+  tvOSSmallIconLayers: []
+  tvOSSmallIconLayersImagesAreCompressed: 0
+  tvOSLargeIconLayers: []
+  tvOSLargeIconLayersImagesAreCompressed: 0
+  tvOSTopShelfImageLayers: []
+  tvOSTopShelfImageLayersImagesAreCompressed: 0
+  tvOSTopShelfImageWideLayers: []
+  tvOSTopShelfImageWideLayersImagesAreCompressed: 0
+  iOSLaunchScreenType: 0
+  iOSLaunchScreenPortrait: {fileID: 0}
+  iOSLaunchScreenLandscape: {fileID: 0}
+  iOSLaunchScreenBackgroundColor:
+    serializedVersion: 2
+    rgba: 4278190080
+  iOSLaunchScreenFillPct: 100
+  iOSLaunchScreenSize: 100
+  iOSLaunchScreenCustomXibPath:
+  iOSLaunchScreeniPadType: 0
+  iOSLaunchScreeniPadImage: {fileID: 0}
+  iOSLaunchScreeniPadBackgroundColor:
+    serializedVersion: 2
+    rgba: 4278190080
+  iOSLaunchScreeniPadFillPct: 100
+  iOSLaunchScreeniPadSize: 100
+  iOSLaunchScreeniPadCustomXibPath:
+  iOSUseLaunchScreenStoryboard: 0
+  iOSLaunchScreenCustomStoryboardPath:
+  iOSLaunchScreeniPadCustomStoryboardPath:
+  iOSDeviceRequirements: []
+  iOSURLSchemes: []
+  iOSBackgroundModes: 0
+  iOSMetalForceHardShadows: 0
+  metalEditorSupport: 1
+  metalAPIValidation: 1
+  iOSRenderExtraFrameOnPause: 0
+  iOSAppInBackgroundBehavior: 0
+  iOSExtendedQualityRestorationRequiresUserAction: 0
+  iOSAutomaticallyDetectAndAddCapabilities: 1
+  appleEnableProMotion: 0
+  shaderPrecisionModel: 0
+  iPhoneAdvertisingIdentifierEnabled: 0
+  iOSRequireARKit: 0
+  iOSAutomaticallySupportedCapabilities: 0
+  iOSAllowHTTPDownload: 1
+  iOSGameControllerBackgroundHandling: 0
+  iOSManuallySelectedCapabilities:
+  ipadSplashScreen: {fileID: 0}
+  iOSTargetDevice: 2
+  iOSIsWirelessCarPlay: 0
+  forceSingleInstance: 0
+  useFlipModelSwapchain: 1
+  submitAnalytics: 1
+  usePlayerLog: 1
+  bakeCollisionMeshes: 0
+  forceSingleInstance: 0
+  useFlipModelSwapchain: 1
+  resizableWindow: 0
+  useMacAppStoreValidation: 0
+  macAppStoreCategory: public.app-category.games
+  gpuSkinning: 0
+  stripPhysics: 0
+  graphicsJobs: 0
+  graphicsJobMode: 0
+  enableFrameTimingStats: 0
+  enableOpenGLProfilerGPURecorders: 1
+  useHDRDisplay: 0
+  hdrBitDepth: 0
+  m_ColorGamuts:
+  - 0
+  targetPixelDensity: 30
+  resolutionScalingMode: 0
+  androidSupportedAspectRatio: 1
+  androidMaxAspectRatio: 2.1
+  applicationIdentifier:
+    Android: com.zombieislandstudios.zombieislandvr
+    Standalone: com.zombieislandstudios.zombieislandvr
+    iPhone: com.zombieislandstudios.zombieislandvr
+    tvOS: com.zombieislandstudios.zombieislandvr
+  buildNumber:
+    Standalone: 0
+    iPhone: 0
+    tvOS: 0
+  AndroidBundleVersionCode: 1
+  AndroidMinSdkVersion: 29
+  AndroidTargetSdkVersion: 33
+  AndroidPreferredInstallLocation: 1
+  aotOptions:
+  AndroidIsGame: 1
+  AndroidEnableTango: 0
+  androidEnableBarcode: 0
+  androidUseLowLatencyAudioIfPossible: 0
+  androidDisableDepthAndStencilBuffers: 0
+  androidStartInFullscreen: 1
+  androidFullscreenMode: 1
+  androidBlitType: 0
+  androidGamepadSupportLevel: 0
+  androidMaxAniso: 0
+  AndroidUseCustomKeystore: 0
+  AndroidKeyaliasName:
+  AndroidBuildApkPerCpuArchitecture: 0
+  AndroidUseAPKExpansionFiles: 0
+  androidUseSwappy: 0
+  androidRenderOutsideSafeArea: 1
+  androidUseHighQualityBlitType: 0
+  androidSupportedArchitectures: 1
+  stripEngineCode: 1
+  iPhoneScriptCallOptimization: 0
+  fetchWirelessDevices: 0
+  scriptingDefineSymbols:
+    Android: ZOMBIE_ISLAND_VR;UNITY_ANDROID;META_XR
+  additionalCompilerArguments: {}
+  platformArchitecture:
+    Android: 1
+  scriptingBackend:
+    Android: 1
+  managedStrippingLevel:
+    Android: 1
+  incrementalIl2cppBuild: {}
+  suppressCommonWarnings: 1
+  allowUnsafeCode: 0
+  useDeterministicCompilation: 1
+  useRoslynAnalyzers: 1
+  m_DefaultShaderChunkSizeInMB: 16
+  m_DefaultShaderChunkCount: 0
+  enableRoslynAnalyzers: 1
+  selectedPlatform: 0
+  additionalIl2CppArgs:
+  scriptingRuntimeVersion: 1
+  gcIncremental: 1
+  assemblyVersionValidation: 1
+  m_VR180: 0
+  m_HMDResolution: 2
+  m_HMDViewportScale: 1
+  m_XRStereoRenderingMode: 2
+  vrSettings:
+    cardboard:
+      depthFormat: 0
+      enableTransitionView: 0
+    daydream:
+      depthFormat: 0
+      useSustainedPerformance: 0
+      enableVideoLayer: 0
+      useProtectedVideoMemory: 0
+      minimumSupportedHeadTracking: 0
+      maximumSupportedHeadTracking: 1
+    hololens:
+      depthFormat: 1
+      depthBufferSharingEnabled: 1
+    lumin:
+      depthFormat: 0
+      frameTiming: 2
+      enableGLCoreProfile: 0
+    oculus:
+      sharedDepthBuffer: 1
+      dashSupport: 1
+      lowOverheadMode: 0
+      protectedContext: 0
+      v2Signing: 1
+      enableSpatialAnchors: 0
+    openXR:
+      depthSubmissionMode: 1
+  openXRFeatures:
+    Standalone: []
+    Android:
+    - enabled: 1
+      buildTargetGroup: 13
+      featureIdString: com.unity.openxr.feature.input
+    - enabled: 1
+      buildTargetGroup: 13
+      featureIdString: com.meta.xr.sdk.questsupport
+  openXRRemotingEnabled: 0
+  openXRRemotingSecureConnection: 0
+  cloudProjectId:
+  framebufferDepthMemorylessMode: 0
+  qualitySettingsNames: []
+  projectName:
+  organizationId:
+  cloudEnabled: 0
+  legacyClampBlendShapeWeights: 0
+  playerDataPath:
+  forceSRGBBlit: 1
+  virtualTexturingSupportEnabled: 0
