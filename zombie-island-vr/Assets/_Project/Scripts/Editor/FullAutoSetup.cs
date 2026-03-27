@@ -6,6 +6,11 @@ using Unity.AI.Navigation;
 using UnityEngine.AI;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using ZombieIslandVR.World;
+using ZombieIslandVR.Player;
+using ZombieIslandVR.Weapons;
+using ZombieIslandVR.Zombie;
+using ZombieIslandVR.Systems;
 
 namespace ZombieIslandVR.Editor
 {
@@ -28,7 +33,7 @@ namespace ZombieIslandVR.Editor
             if (!OpenScene()) return;
 
             EditorUtility.DisplayProgressBar("Zombie Island Setup", "Criando ambiente...", 0.1f);
-            World.RuntimeSceneSetup.SetupScene();
+            RuntimeSceneSetup.SetupScene();
 
             EditorUtility.DisplayProgressBar("Zombie Island Setup", "Criando XR Rig (player)...", 0.3f);
             CreateXRRig();
@@ -114,13 +119,13 @@ namespace ZombieIslandVR.Editor
             cc.radius = 0.3f;
 
             // Componentes de gameplay no root
-            var stats       = player.AddComponent<ZombieIslandVR.Player.PlayerStats>();
-            var inventory   = player.AddComponent<ZombieIslandVR.Player.PlayerInventory>();
-            var controller  = player.AddComponent<ZombieIslandVR.Player.PlayerController>();
-            var hands       = player.AddComponent<ZombieIslandVR.Player.PlayerHands>();
-            var foodSys     = player.AddComponent<ZombieIslandVR.Systems.FoodSystem>();
-            var craftSys    = player.AddComponent<ZombieIslandVR.Systems.CraftingSystem>();
-            var saveSystem  = player.AddComponent<ZombieIslandVR.Systems.SaveSystem>();
+            var stats       = player.AddComponent<PlayerStats>();
+            var inventory   = player.AddComponent<PlayerInventory>();
+            var controller  = player.AddComponent<PlayerController>();
+            var hands       = player.AddComponent<PlayerHands>();
+            var foodSys     = player.AddComponent<FoodSystem>();
+            var craftSys    = player.AddComponent<CraftingSystem>();
+            var saveSystem  = player.AddComponent<SaveSystem>();
 
             // ── Camera Offset ──
             var camOffset = new GameObject("Camera Offset");
@@ -159,7 +164,7 @@ namespace ZombieIslandVR.Editor
 
             saveSystem.playerStats     = stats;
             saveSystem.playerTransform = player.transform;
-            saveSystem.dayNightCycle   = GameObject.FindObjectOfType<ZombieIslandVR.World.DayNightCycle>();
+            saveSystem.dayNightCycle   = GameObject.FindObjectOfType<DayNightCycle>();
 
             Debug.Log("[FullAutoSetup] XR Rig criado com todos os componentes de player.");
         }
@@ -179,11 +184,11 @@ namespace ZombieIslandVR.Editor
             Directory.CreateDirectory("Assets/Prefabs/Zombies");
 
             CreateZombiePrefab("Zombie_Common", 1.0f, new Color(0.3f, 0.15f, 0.3f),
-                                100f, 1.5f, ZombieIslandVR.Zombie.ZombieAI.ZombieType.Common);
+                                100f, 1.5f, ZombieAI.ZombieType.Common);
             CreateZombiePrefab("Zombie_Runner", 0.85f, new Color(0.6f, 0.5f, 0.1f),
-                                60f, 3.5f, ZombieIslandVR.Zombie.ZombieAI.ZombieType.Runner);
+                                60f, 3.5f, ZombieAI.ZombieType.Runner);
             CreateZombiePrefab("Zombie_Brute", 1.5f, new Color(0.5f, 0.05f, 0.05f),
-                                400f, 0.9f, ZombieIslandVR.Zombie.ZombieAI.ZombieType.Brute);
+                                400f, 0.9f, ZombieAI.ZombieType.Brute);
 
             AssetDatabase.SaveAssets();
             Debug.Log("[FullAutoSetup] 3 prefabs de zumbi criados em Assets/Prefabs/Zombies/");
@@ -191,7 +196,7 @@ namespace ZombieIslandVR.Editor
 
         private static void CreateZombiePrefab(string prefabName, float scale, Color color,
                                                 float hp, float speed,
-                                                ZombieIslandVR.Zombie.ZombieAI.ZombieType type)
+                                                ZombieAI.ZombieType type)
         {
             string path = $"Assets/Prefabs/Zombies/{prefabName}.prefab";
             if (File.Exists(path)) return;
@@ -244,10 +249,10 @@ namespace ZombieIslandVR.Editor
             capsule.height = 2f;
             capsule.radius = 0.3f;
 
-            var ai = root.AddComponent<ZombieIslandVR.Zombie.ZombieAI>();
+            var ai = root.AddComponent<ZombieAI>();
             ai.zombieType = type;
 
-            var health = root.AddComponent<ZombieIslandVR.Zombie.ZombieHealth>();
+            var health = root.AddComponent<ZombieHealth>();
             health.maxHealth = hp;
 
             root.AddComponent<AudioSource>();
@@ -309,7 +314,7 @@ namespace ZombieIslandVR.Editor
             var col = root.AddComponent<BoxCollider>();
             col.size = new Vector3(0.05f, 0.12f, 0.18f);
 
-            var firearm = root.AddComponent<ZombieIslandVR.Weapons.FirearmWeapon>();
+            var firearm = root.AddComponent<FirearmWeapon>();
             firearm.muzzlePoint = muzzlePoint.transform;
 
             PrefabUtility.SaveAsPrefabAsset(root, path);
@@ -342,7 +347,7 @@ namespace ZombieIslandVR.Editor
             root.AddComponent<Rigidbody>();
             root.AddComponent<BoxCollider>();
 
-            var melee = root.AddComponent<ZombieIslandVR.Weapons.MeleeWeapon>();
+            var melee = root.AddComponent<MeleeWeapon>();
             melee.canBlock = true;
 
             PrefabUtility.SaveAsPrefabAsset(root, path);
@@ -389,7 +394,7 @@ namespace ZombieIslandVR.Editor
             col.size = new Vector3(0.18f, 0.18f, 0.06f);
             col.isTrigger = true;
 
-            var interactable = root.AddComponent<ZombieIslandVR.World.InteractableObject>();
+            var interactable = root.AddComponent<InteractableObject>();
             interactable.healthRestore = 50f;
             interactable.interactionPrompt = "Usar Medkit";
 
