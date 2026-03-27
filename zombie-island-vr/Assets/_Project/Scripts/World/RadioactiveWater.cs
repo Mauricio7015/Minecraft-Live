@@ -48,7 +48,7 @@ namespace ZombieIslandVR.World
 
             // Auto-find volume if not assigned
             if (postProcessVolume == null)
-                postProcessVolume = FindObjectOfType<Volume>();
+                postProcessVolume = FindFirstObjectByType<Volume>();
 
             if (postProcessVolume != null && postProcessVolume.profile != null)
             {

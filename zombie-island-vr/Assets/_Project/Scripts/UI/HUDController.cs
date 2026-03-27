@@ -71,7 +71,7 @@ namespace ZombieIslandVR.UI
                 playerStats.onThirstChanged.AddListener(UpdateThirst);
             }
 
-            _dayNightCycle = FindObjectOfType<ZombieIslandVR.World.DayNightCycle>();
+            _dayNightCycle = FindFirstObjectByType<ZombieIslandVR.World.DayNightCycle>();
             if (_dayNightCycle != null)
                 _dayNightCycle.onNightBegin.AddListener(IncrementDay);
         }

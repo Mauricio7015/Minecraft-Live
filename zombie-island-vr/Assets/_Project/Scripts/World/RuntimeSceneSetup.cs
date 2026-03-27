@@ -48,7 +48,7 @@ namespace ZombieIslandVR.World
             SetMaterialColor(floor, new Color(0.2f, 0.35f, 0.15f));  // dark grass
 
             // Mark as NavMesh static
-            GameObjectUtility.SetStaticEditorFlags(floor, StaticEditorFlags.NavigationStatic);
+            GameObjectUtility.SetStaticEditorFlags(floor, StaticEditorFlags.ContributeGI | StaticEditorFlags.OccluderStatic);
         }
 
         // ─── Sky & Fog ────────────────────────────────────────────────────────
@@ -138,7 +138,7 @@ namespace ZombieIslandVR.World
                 go.transform.localScale = scale;
                 go.transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 90f), 0f);
                 SetMaterialColor(go, color);
-                GameObjectUtility.SetStaticEditorFlags(go, StaticEditorFlags.NavigationStatic);
+                GameObjectUtility.SetStaticEditorFlags(go, StaticEditorFlags.ContributeGI | StaticEditorFlags.OccluderStatic);
             }
         }
 
@@ -160,7 +160,7 @@ namespace ZombieIslandVR.World
                 go.transform.position = pos;
                 go.transform.localScale = scale;
                 SetMaterialColor(go, color);
-                GameObjectUtility.SetStaticEditorFlags(go, StaticEditorFlags.NavigationStatic);
+                GameObjectUtility.SetStaticEditorFlags(go, StaticEditorFlags.ContributeGI | StaticEditorFlags.OccluderStatic);
             }
         }
 
@@ -184,7 +184,7 @@ namespace ZombieIslandVR.World
                 go.transform.localScale = scale;
                 go.transform.rotation = Quaternion.Euler(0f, rotY, 0f);
                 SetMaterialColor(go, new Color(0.5f, 0.45f, 0.4f));
-                GameObjectUtility.SetStaticEditorFlags(go, StaticEditorFlags.NavigationStatic);
+                GameObjectUtility.SetStaticEditorFlags(go, StaticEditorFlags.ContributeGI | StaticEditorFlags.OccluderStatic);
             }
         }
 
@@ -217,7 +217,7 @@ namespace ZombieIslandVR.World
                 roof.transform.localScale = new Vector3(2f, 0.7f, 1.8f);
                 SetMaterialColor(roof, new Color(0.25f, 0.08f, 0.08f));
 
-                GameObjectUtility.SetStaticEditorFlags(car, StaticEditorFlags.NavigationStatic);
+                GameObjectUtility.SetStaticEditorFlags(car, StaticEditorFlags.ContributeGI | StaticEditorFlags.OccluderStatic);
             }
         }
 
@@ -254,7 +254,7 @@ namespace ZombieIslandVR.World
                     building.transform.localPosition = new Vector3(bx, bh * 0.5f, bz);
                     building.transform.localScale = new Vector3(bw, bh, bd);
                     SetMaterialColor(building, new Color(0.35f, 0.3f, 0.25f));
-                    GameObjectUtility.SetStaticEditorFlags(building, StaticEditorFlags.NavigationStatic);
+                    GameObjectUtility.SetStaticEditorFlags(building, StaticEditorFlags.ContributeGI | StaticEditorFlags.OccluderStatic);
                 }
             }
         }
@@ -297,7 +297,7 @@ namespace ZombieIslandVR.World
 
         private static void SetupZombieSpawner()
         {
-            var existing = Object.FindObjectOfType<ZombieIslandVR.Zombie.ZombieSpawner>();
+            var existing = Object.FindFirstObjectByType<ZombieIslandVR.Zombie.ZombieSpawner>();
             if (existing != null) return;
 
             var go = new GameObject("ZombieSpawner");
@@ -309,7 +309,7 @@ namespace ZombieIslandVR.World
 
         private static void SetupDayNightCycle()
         {
-            var existing = Object.FindObjectOfType<DayNightCycle>();
+            var existing = Object.FindFirstObjectByType<DayNightCycle>();
             if (existing != null) return;
 
             var sunGO = GameObject.Find("Sun") ?? new GameObject("Sun");
@@ -328,7 +328,7 @@ namespace ZombieIslandVR.World
 
         private static void SetupGunShotSystem()
         {
-            var existing = Object.FindObjectOfType<ZombieIslandVR.Systems.GunShotEventSystem>();
+            var existing = Object.FindFirstObjectByType<ZombieIslandVR.Systems.GunShotEventSystem>();
             if (existing != null) return;
 
             var go = new GameObject("GunShotEventSystem");

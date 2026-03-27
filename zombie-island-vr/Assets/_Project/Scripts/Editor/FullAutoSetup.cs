@@ -178,7 +178,7 @@ namespace ZombieIslandVR.Editor
 
             saveSystem.playerStats     = stats;
             saveSystem.playerTransform = player.transform;
-            saveSystem.dayNightCycle   = GameObject.FindObjectOfType<DayNightCycle>();
+            saveSystem.dayNightCycle   = GameObject.FindFirstObjectByType<DayNightCycle>();
 
             Debug.Log("[FullAutoSetup] XR Rig criado com todos os componentes de player.");
         }
@@ -420,7 +420,7 @@ namespace ZombieIslandVR.Editor
 
         private static void CreateGlobalVolume()
         {
-            if (GameObject.FindObjectOfType<Volume>() != null) return;
+            if (GameObject.FindFirstObjectByType<Volume>() != null) return;
 
             var go = new GameObject("Global Volume");
             var vol = go.AddComponent<Volume>();

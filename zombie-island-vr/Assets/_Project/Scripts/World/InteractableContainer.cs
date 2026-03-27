@@ -34,7 +34,7 @@ namespace ZombieIslandVR.World
 
         private void Start()
         {
-            _dayNightCycle = FindObjectOfType<DayNightCycle>();
+            _dayNightCycle = FindFirstObjectByType<DayNightCycle>();
             if (resetOnDawn && _dayNightCycle != null)
                 _dayNightCycle.onDawnBegin.AddListener(ResetContainer);
         }

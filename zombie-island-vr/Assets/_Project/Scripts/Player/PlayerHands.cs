@@ -69,22 +69,22 @@ namespace ZombieIslandVR.Player
             if (_rightDevice.TryGetFeatureValue(CommonUsages.gripButton, out bool rightGrip))
             {
                 if (rightGrip && RightHandWeapon == null)
-                    TryGrab(rightHandAnchor, ref RightHandWeapon, "right");
+                    RightHandWeapon = TryGrab(rightHandAnchor, "right");
                 else if (!rightGrip && RightHandWeapon != null)
-                    Release(ref RightHandWeapon, "right");
+                    RightHandWeapon = Release(RightHandWeapon, "right");
             }
 
             // Left hand grab
             if (_leftDevice.TryGetFeatureValue(CommonUsages.gripButton, out bool leftGrip))
             {
                 if (leftGrip && LeftHandWeapon == null)
-                    TryGrab(leftHandAnchor, ref LeftHandWeapon, "left");
+                    LeftHandWeapon = TryGrab(leftHandAnchor, "left");
                 else if (!leftGrip && LeftHandWeapon != null)
-                    Release(ref LeftHandWeapon, "left");
+                    LeftHandWeapon = Release(LeftHandWeapon, "left");
             }
         }
 
-        private void TryGrab(Transform handAnchor, ref WeaponBase slot, string hand)
+        private WeaponBase TryGrab(Transform handAnchor, string hand)
         {
             Collider[] hits = Physics.OverlapSphere(handAnchor.position, grabRadius, grabbableLayer);
             WeaponBase closest = null;
@@ -99,20 +99,21 @@ namespace ZombieIslandVR.Player
 
             if (closest != null)
             {
-                slot = closest;
-                slot.OnGrab(handAnchor, this);
+                closest.OnGrab(handAnchor, this);
                 Debug.Log($"[PlayerHands] {hand} hand grabbed {closest.weaponName}");
+                return closest;
             }
+            return null;
         }
 
-        private void Release(ref WeaponBase slot, string hand)
+        private WeaponBase Release(WeaponBase slot, string hand)
         {
             if (slot != null)
             {
                 slot.OnRelease();
                 Debug.Log($"[PlayerHands] {hand} hand released {slot.weaponName}");
-                slot = null;
             }
+            return null;
         }
 
         // ─── Fire ─────────────────────────────────────────────────────────────

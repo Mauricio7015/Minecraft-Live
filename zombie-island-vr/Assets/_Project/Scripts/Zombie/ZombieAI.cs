@@ -67,7 +67,7 @@ namespace ZombieIslandVR.Zombie
         private void Start()
         {
             _player = GameObject.FindWithTag("Player")?.transform;
-            _dayNightCycle = FindObjectOfType<ZombieIslandVR.World.DayNightCycle>();
+            _dayNightCycle = FindFirstObjectByType<ZombieIslandVR.World.DayNightCycle>();
         }
 
         private void Update()

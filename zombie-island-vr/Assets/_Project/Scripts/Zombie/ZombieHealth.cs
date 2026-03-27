@@ -72,7 +72,7 @@ namespace ZombieIslandVR.Zombie
         private void Die(Vector3 force, Vector3 hitPoint)
         {
             isDead = true;
-            _ai?.enabled = false;
+            if (_ai != null) _ai.enabled = false;
             zombieAnimator.enabled = false;
 
             EnableRagdoll();
