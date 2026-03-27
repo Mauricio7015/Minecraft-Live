@@ -95,7 +95,7 @@ PlayerSettings:
   m_MTRendering: 1
   m_StackTraceTypes: 010000000100000001000000010000000100000001000000
   iosShowActivityIndicatorOnLoading: -1
-  androidShowActivityIndicatorOnLoading: -1
+  androidShowActivityIndicatorOnLoading: 0
   iosAppInBackgroundBehavior: 0
   iosExtendedQualityRestorationRequiresUserAction: 0
   m_BuildTargetIcons: []
@@ -348,8 +348,6 @@ PlayerSettings:
   submitAnalytics: 1
   usePlayerLog: 1
   bakeCollisionMeshes: 0
-  forceSingleInstance: 0
-  useFlipModelSwapchain: 1
   resizableWindow: 0
   useMacAppStoreValidation: 0
   macAppStoreCategory: public.app-category.games
@@ -461,9 +459,6 @@ PlayerSettings:
     - enabled: 1
       buildTargetGroup: 13
       featureIdString: com.unity.openxr.feature.input
-    - enabled: 1
-      buildTargetGroup: 13
-      featureIdString: com.meta.xr.sdk.questsupport
   openXRRemotingEnabled: 0
   openXRRemotingSecureConnection: 0
   cloudProjectId:

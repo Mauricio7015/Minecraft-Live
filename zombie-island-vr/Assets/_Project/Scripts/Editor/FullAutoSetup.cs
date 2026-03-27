@@ -141,8 +141,22 @@ namespace ZombieIslandVR.Editor
             camGO.AddComponent<AudioListener>();
 
             // TrackedPoseDriver para tracking de cabeça (OpenXR)
-            var tpd = camGO.AddComponent<UnityEngine.InputSystem.XR.TrackedPoseDriver>();
-            Debug.Log("[FullAutoSetup] TrackedPoseDriver adicionado à câmera.");
+            // Usa reflexão para evitar erro de compilação se InputSystem.XR não estiver disponível
+            var tpdType = System.Type.GetType(
+                "UnityEngine.InputSystem.XR.TrackedPoseDriver, Unity.InputSystem");
+            if (tpdType != null)
+            {
+                camGO.AddComponent(tpdType);
+                Debug.Log("[FullAutoSetup] TrackedPoseDriver adicionado à câmera.");
+            }
+            else
+            {
+                // Fallback: SpatialTracking (legacy)
+                var legacyType = System.Type.GetType(
+                    "UnityEngine.SpatialTracking.TrackedPoseDriver, UnityEngine.SpatialTracking");
+                if (legacyType != null) camGO.AddComponent(legacyType);
+                Debug.LogWarning("[FullAutoSetup] InputSystem.XR não encontrado. Usando fallback.");
+            }
 
             // ── Mãos (controladores) ──
             var leftHand = CreateHandAnchor("Left Hand Anchor", player.transform,
